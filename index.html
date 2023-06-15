@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>BJJ Timer</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+    
+    .timer {
+      font-size: 48px;
+      margin-bottom: 20px;
+    }
+    
+    .controls {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+    
+    .btn {
+      margin: 0 5px;
+    }
+    
+    .form {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      margin-bottom: 20px;
+    }
+    
+    .form-group {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    
+    .label {
+      width: 200px;
+      margin-right: 10px;
+    }
+    
+    .points-table {
+      width: 100%;
+      margin-top: 20px;
+    }
+    
+    .points-table th, .points-table td {
+      padding: 8px;
+      text-align: left;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 class="text-3xl mb-6">BJJ Timer</h1>
+    
+    <div class="timer" id="timer">00:00</div>
+    
+    <div class="controls">
+      <button class="btn bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" id="startBtn">Start</button>
+      <button class="btn bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" id="pauseBtn" disabled>Pause</button>
+      <button class="btn bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" id="resetBtn" disabled>Reset</button>
+    </div>
+    
+    <form class="form">
+      <div class="form-group">
+        <label class="label" for="rounds">Rounds:</label>
+        <input class="w-24 px-3 py-2 border rounded" type="number" id="rounds" min="1" value="5">
+      </div>
+      <div class="form-group">
+        <label class="label" for="roundDuration">Round Duration (seconds):</label>
+        <input class="w-24 px-3 py-2 border rounded" type="number" id="roundDuration" min="1" value="300">
+      </div>
+      <div class="form-group">
+        <label class="label" for="restDuration">Rest Duration (seconds):</label>
+        <input class="w-24 px-3 py-2 border rounded" type="number" id="restDuration" min="1" value="60">
+      </div>
+      <button class="btn bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" type="submit">Set Timer</button>
+    </form>
+
+    <button class="btn bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" id="trackPointsBtn">Track Points</button>
+    
+    <div id="pointsTableContainer" style="display: none;">
+      <table class="points-table">
+        <thead>
+          <tr>
+            <th>Red Corner</th>
+            <th>Blue Corner</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><input class="w-24 px-3 py-2 border rounded" type="number" id="userXPoints" min="0" value="0"></td>
+            <td><input class="w-24 px-3 py-2 border rounded" type="number" id="userYPoints" min="0" value="0"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  
+  <script>
+    var countdown;
+    var currentSeconds;
+    var roundsInput = document.getElementById("rounds");
+    var roundDurationInput = document.getElementById("roundDuration");
+    var restDurationInput = document.getElementById("restDuration");
+    var startBtn = document.getElementById("startBtn");
+    var pauseBtn = document.getElementById("pauseBtn");
+    var resetBtn = document.getElementById("resetBtn");
+    var timerDisplay = document.getElementById("timer");
+    var trackPointsBtn = document.getElementById("trackPointsBtn");
+    var pointsTableContainer = document.getElementById("pointsTableContainer");
+    var userXPointsInput = document.getElementById("userXPoints");
+    var userYPointsInput = document.getElementById("userYPoints");
+    
+    function startTimer() {
+      startBtn.disabled = true;
+      pauseBtn.disabled = false;
+      resetBtn.disabled = false;
+
+      var totalSeconds = parseInt(roundDurationInput.value);
+      currentSeconds = totalSeconds;
+
+      countdown = setInterval(function() {
+        if (currentSeconds === 0) {
+          clearInterval(countdown);
+          timerDisplay.innerHTML = "Round Complete!";
+          startBtn.disabled = false;
+          pauseBtn.disabled = true;
+          resetBtn.disabled = true;
+          return;
+        }
+
+        var minutes = Math.floor(currentSeconds / 60);
+        var seconds = currentSeconds % 60;
+
+        timerDisplay.innerHTML = minutes.toString().padStart(2, "0") + ":" + seconds.toString().padStart(2, "0");
+
+        currentSeconds--;
+      }, 1000);
+    }
+
+    function pauseTimer() {
+      clearInterval(countdown);
+      startBtn.disabled = false;
+      pauseBtn.disabled = true;
+      resetBtn.disabled = false;
+    }
+
+    function resetTimer() {
+      clearInterval(countdown);
+      timerDisplay.innerHTML = "00:00";
+      startBtn.disabled = false;
+      pauseBtn.disabled = true;
+      resetBtn.disabled = true;
+    }
+
+    function trackPoints() {
+      pointsTableContainer.style.display = "block";
+      trackPointsBtn.disabled = true;
+    }
+
+    document.querySelector("form").addEventListener("submit", function(e) {
+      e.preventDefault();
+      resetTimer();
+      startTimer();
+    });
+
+    startBtn.addEventListener("click", startTimer);
+    pauseBtn.addEventListener("click", pauseTimer);
+    resetBtn.addEventListener("click", resetTimer);
+    trackPointsBtn.addEventListener("click", trackPoints);
+  </script>
+</body>
+</html>
