@@ -21,6 +21,12 @@
       text-align: center;
     }
     
+    .round {
+      font-size: 24px;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+    
     .controls {
       display: flex;
       justify-content: center;
@@ -71,6 +77,8 @@
 
   <div class="container">
     <div class="timer" id="timer">00:00</div>
+    
+    <div class="round" id="currentRound">Round 1</div>
     
     <div class="controls">
       <button class="btn btn-primary" id="startBtn">Start</button>
@@ -129,6 +137,8 @@
     var pointsTableContainer = document.getElementById("pointsTableContainer");
     var userXPointsInput = document.getElementById("userXPoints");
     var userYPointsInput = document.getElementById("userYPoints");
+    var currentRoundDisplay = document.getElementById("currentRound");
+    var currentRound = 1;
     
     function startTimer() {
       startBtn.disabled = true;
@@ -145,6 +155,8 @@
           startBtn.disabled = false;
           pauseBtn.disabled = true;
           resetBtn.disabled = true;
+          currentRound++;
+          currentRoundDisplay.innerHTML = "Round " + currentRound;
           return;
         }
 
@@ -170,6 +182,8 @@
       startBtn.disabled = false;
       pauseBtn.disabled = true;
       resetBtn.disabled = true;
+      currentRound = 1;
+      currentRoundDisplay.innerHTML = "Round " + currentRound;
     }
 
     function trackPoints() {
