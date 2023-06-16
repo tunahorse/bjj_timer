@@ -4,12 +4,26 @@
   <title>BJJ Timer</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <style>
+    .navbar {
+      background-color: #E2E8F0;
+      padding: 20px;
+      text-align: center;
+    }
+    
+    .navbar h1 {
+      font-size: 24px;
+      margin: 0;
+      color: #2C5282;
+    }
+    
     .container {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      height: 100vh;
+      min-height: 100vh;
+      padding: 20px;
+      text-align: center;
     }
     
     .timer {
@@ -55,12 +69,28 @@
       padding: 8px;
       text-align: left;
     }
+    
+    @media (max-width: 768px) {
+      .container {
+        padding: 10px;
+      }
+      
+      .navbar {
+        padding: 10px;
+      }
+      
+      .navbar h1 {
+        font-size: 20px;
+      }
+    }
   </style>
 </head>
 <body>
+  <div class="navbar">
+    <h1>BJJ Timer</h1>
+  </div>
+
   <div class="container">
-    <h1 class="text-3xl mb-6">BJJ Timer</h1>
-    
     <div class="timer" id="timer">00:00</div>
     
     <div class="controls">
@@ -75,12 +105,12 @@
         <input class="w-24 px-3 py-2 border rounded" type="number" id="rounds" min="1" value="5">
       </div>
       <div class="form-group">
-        <label class="label" for="roundDuration">Round Duration (seconds):</label>
-        <input class="w-24 px-3 py-2 border rounded" type="number" id="roundDuration" min="1" value="300">
+        <label class="label" for="roundDuration">Round Duration (minutes):</label>
+        <input class="w-24 px-3 py-2 border rounded" type="number" id="roundDuration" min="1" value="5">
       </div>
       <div class="form-group">
-        <label class="label" for="restDuration">Rest Duration (seconds):</label>
-        <input class="w-24 px-3 py-2 border rounded" type="number" id="restDuration" min="1" value="60">
+        <label class="label" for="restDuration">Rest Duration (minutes):</label>
+        <input class="w-24 px-3 py-2 border rounded" type="number" id="restDuration" min="1" value="1">
       </div>
       <button class="btn bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" type="submit">Set Timer</button>
     </form>
@@ -125,8 +155,8 @@
       pauseBtn.disabled = false;
       resetBtn.disabled = false;
 
-      var totalSeconds = parseInt(roundDurationInput.value);
-      currentSeconds = totalSeconds;
+      var totalMinutes = parseInt(roundDurationInput.value);
+      currentSeconds = totalMinutes * 60;
 
       countdown = setInterval(function() {
         if (currentSeconds === 0) {
